@@ -61,14 +61,15 @@ Now that you have configured and deployed AWS Control Tower Account Factory for 
 
 | Name | Version |
 |------|---------|
-| <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) | >= 0.15.0 |
-| <a name="requirement_aws"></a> [aws](#requirement\_aws) | >= 3.15 |
+| <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) | >= 0.15.1 |
+| <a name="requirement_aws"></a> [aws](#requirement\_aws) | >= 3.72, < 4.0.0 |
 
 ## Providers
 
 | Name | Version |
 |------|---------|
-| <a name="provider_local"></a> [local](#provider\_local) | n/a |
+| <a name="provider_aws"></a> [aws](#provider\_aws) | 3.74.3 |
+| <a name="provider_local"></a> [local](#provider\_local) | 2.2.2 |
 
 ## Modules
 
@@ -83,11 +84,14 @@ Now that you have configured and deployed AWS Control Tower Account Factory for 
 | <a name="module_aft_iam_roles"></a> [aft\_iam\_roles](#module\_aft\_iam\_roles) | ./modules/aft-iam-roles | n/a |
 | <a name="module_aft_lambda_layer"></a> [aft\_lambda\_layer](#module\_aft\_lambda\_layer) | ./modules/aft-lambda-layer | n/a |
 | <a name="module_aft_ssm_parameters"></a> [aft\_ssm\_parameters](#module\_aft\_ssm\_parameters) | ./modules/aft-ssm-parameters | n/a |
+| <a name="module_packaging"></a> [packaging](#module\_packaging) | ./modules/aft-archives | n/a |
+| <a name="module_vpc"></a> [vpc](#module\_vpc) | terraform-aws-modules/vpc/aws | n/a |
 
 ## Resources
 
 | Name | Type |
 |------|------|
+| [aws_availability_zones.available](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/availability_zones) | data source |
 | [local_file.version](https://registry.terraform.io/providers/hashicorp/local/latest/docs/data-sources/file) | data source |
 
 ## Inputs
@@ -104,14 +108,13 @@ Now that you have configured and deployed AWS Control Tower Account Factory for 
 | <a name="input_aft_feature_delete_default_vpcs_enabled"></a> [aft\_feature\_delete\_default\_vpcs\_enabled](#input\_aft\_feature\_delete\_default\_vpcs\_enabled) | Feature flag toggling deletion of default VPCs on/off | `bool` | `false` | no |
 | <a name="input_aft_feature_enterprise_support"></a> [aft\_feature\_enterprise\_support](#input\_aft\_feature\_enterprise\_support) | Feature flag toggling Enterprise Support enrollment on/off | `bool` | `false` | no |
 | <a name="input_aft_framework_repo_git_ref"></a> [aft\_framework\_repo\_git\_ref](#input\_aft\_framework\_repo\_git\_ref) | Git branch from which the AFT framework should be sourced from | `string` | `"main"` | no |
-| <a name="input_aft_framework_repo_url"></a> [aft\_framework\_repo\_url](#input\_aft\_framework\_repo\_url) | Git repo URL where the AFT framework should be sourced from | `string` | `"git@github.com:aws-ia/terraform-aws-control_tower_account_factory.git"` | no |
+| <a name="input_aft_framework_repo_url"></a> [aft\_framework\_repo\_url](#input\_aft\_framework\_repo\_url) | Git repo URL where the AFT framework should be sourced from | `string` | `"https://github.com/aws-ia/terraform-aws-control_tower_account_factory.git"` | no |
 | <a name="input_aft_management_account_id"></a> [aft\_management\_account\_id](#input\_aft\_management\_account\_id) | AFT Management Account ID | `string` | n/a | yes |
 | <a name="input_aft_vpc_cidr"></a> [aft\_vpc\_cidr](#input\_aft\_vpc\_cidr) | CIDR Block to allocate to the AFT VPC | `string` | `"192.168.0.0/22"` | no |
-| <a name="input_aft_vpc_private_subnet_01_cidr"></a> [aft\_vpc\_private\_subnet\_01\_cidr](#input\_aft\_vpc\_private\_subnet\_01\_cidr) | CIDR Block to allocate to the Private Subnet 01 | `string` | `"192.168.0.0/24"` | no |
-| <a name="input_aft_vpc_private_subnet_02_cidr"></a> [aft\_vpc\_private\_subnet\_02\_cidr](#input\_aft\_vpc\_private\_subnet\_02\_cidr) | CIDR Block to allocate to the Private Subnet 02 | `string` | `"192.168.1.0/24"` | no |
-| <a name="input_aft_vpc_public_subnet_01_cidr"></a> [aft\_vpc\_public\_subnet\_01\_cidr](#input\_aft\_vpc\_public\_subnet\_01\_cidr) | CIDR Block to allocate to the Public Subnet 01 | `string` | `"192.168.2.0/25"` | no |
-| <a name="input_aft_vpc_public_subnet_02_cidr"></a> [aft\_vpc\_public\_subnet\_02\_cidr](#input\_aft\_vpc\_public\_subnet\_02\_cidr) | CIDR Block to allocate to the Public Subnet 02 | `string` | `"192.168.2.128/25"` | no |
 | <a name="input_aft_vpc_endpoints"></a> [aft\_vpc\_endpoints](#input\_aft\_vpc\_endpoints) | Flag turning VPC endpoints on/off for AFT VPC | `bool` | `true` | no |
+| <a name="input_aft_vpc_private_subnet_cidrs"></a> [aft\_vpc\_private\_subnet\_cidrs](#input\_aft\_vpc\_private\_subnet\_cidrs) | CIDR Blocks to allocate to the Private Subnets | `list(string)` | <pre>[<br>  "192.168.0.0/24"<br>]</pre> | no |
+| <a name="input_aft_vpc_public_subnet_cidrs"></a> [aft\_vpc\_public\_subnet\_cidrs](#input\_aft\_vpc\_public\_subnet\_cidrs) | CIDR Blocks to allocate to the Public Subnets | `list(string)` | <pre>[<br>  "192.168.2.0/25"<br>]</pre> | no |
+| <a name="input_aft_vpc_single_nat_gateway"></a> [aft\_vpc\_single\_nat\_gateway](#input\_aft\_vpc\_single\_nat\_gateway) | Single NAT Gateway enabled | `bool` | `false` | no |
 | <a name="input_audit_account_id"></a> [audit\_account\_id](#input\_audit\_account\_id) | Audit Account Id | `string` | n/a | yes |
 | <a name="input_cloudwatch_log_group_retention"></a> [cloudwatch\_log\_group\_retention](#input\_cloudwatch\_log\_group\_retention) | Amount of days to keep CloudWatch Log Groups for Lambda functions. 0 = Never Expire | `string` | `"0"` | no |
 | <a name="input_ct_home_region"></a> [ct\_home\_region](#input\_ct\_home\_region) | The region from which this module will be executed. This MUST be the same region as Control Tower is deployed. | `string` | n/a | yes |
@@ -144,10 +147,6 @@ Now that you have configured and deployed AWS Control Tower Account Factory for 
 | <a name="output_aft_feature_enterprise_support"></a> [aft\_feature\_enterprise\_support](#output\_aft\_feature\_enterprise\_support) | n/a |
 | <a name="output_aft_management_account_id"></a> [aft\_management\_account\_id](#output\_aft\_management\_account\_id) | n/a |
 | <a name="output_aft_vpc_cidr"></a> [aft\_vpc\_cidr](#output\_aft\_vpc\_cidr) | n/a |
-| <a name="output_aft_vpc_private_subnet_01_cidr"></a> [aft\_vpc\_private\_subnet\_01\_cidr](#output\_aft\_vpc\_private\_subnet\_01\_cidr) | n/a |
-| <a name="output_aft_vpc_private_subnet_02_cidr"></a> [aft\_vpc\_private\_subnet\_02\_cidr](#output\_aft\_vpc\_private\_subnet\_02\_cidr) | n/a |
-| <a name="output_aft_vpc_public_subnet_01_cidr"></a> [aft\_vpc\_public\_subnet\_01\_cidr](#output\_aft\_vpc\_public\_subnet\_01\_cidr) | n/a |
-| <a name="output_aft_vpc_public_subnet_02_cidr"></a> [aft\_vpc\_public\_subnet\_02\_cidr](#output\_aft\_vpc\_public\_subnet\_02\_cidr) | n/a |
 | <a name="output_audit_account_id"></a> [audit\_account\_id](#output\_audit\_account\_id) | n/a |
 | <a name="output_cloudwatch_log_group_retention"></a> [cloudwatch\_log\_group\_retention](#output\_cloudwatch\_log\_group\_retention) | n/a |
 | <a name="output_ct_home_region"></a> [ct\_home\_region](#output\_ct\_home\_region) | n/a |
@@ -163,4 +162,3 @@ Now that you have configured and deployed AWS Control Tower Account Factory for 
 | <a name="output_terraform_version"></a> [terraform\_version](#output\_terraform\_version) | n/a |
 | <a name="output_tf_backend_secondary_region"></a> [tf\_backend\_secondary\_region](#output\_tf\_backend\_secondary\_region) | n/a |
 | <a name="output_vcs_provider"></a> [vcs\_provider](#output\_vcs\_provider) | n/a |
-<!-- END_TF_DOCS -->

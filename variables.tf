@@ -304,6 +304,17 @@ variable "terraform_api_endpoint" {
 # AFT VPC Variables
 #########################################
 
+
+variable "aft_vpc_single_nat_gateway" {
+  type        = bool
+  description = "Single NAT Gateway enabled"
+  default     = false
+  validation {
+    condition     = contains([true, false], var.aft_vpc_single_nat_gateway)
+    error_message = "Valid values for var: aft_vpc_single_nat_gateway are (true, false)."
+  }
+}
+
 variable "aft_vpc_cidr" {
   type        = string
   description = "CIDR Block to allocate to the AFT VPC"
@@ -314,42 +325,22 @@ variable "aft_vpc_cidr" {
   }
 }
 
-variable "aft_vpc_private_subnet_01_cidr" {
-  type        = string
-  description = "CIDR Block to allocate to the Private Subnet 01"
-  default     = "192.168.0.0/24"
+variable "aft_vpc_private_subnet_cidrs" {
+  type        = list(string)
+  description = "CIDR Blocks to allocate to the Private Subnets"
+  default     = ["192.168.0.0/24"]
   validation {
-    condition     = can(regex("^([0-9]{1,3}\\.){3}[0-9]{1,3}(\\/([0-9]|[1-2][0-9]|3[0-2]))?$", var.aft_vpc_private_subnet_01_cidr))
+    condition     = can([for s in var.aft_vpc_private_subnet_cidrs : regex("^([0-9]{1,3}\\.){3}[0-9]{1,3}(\\/([0-9]|[1-2][0-9]|3[0-2]))?$", s)])
     error_message = "Variable var: aft_vpc_private_subnet_01_cidr value must be a valid network CIDR, x.x.x.x/y."
   }
 }
 
-variable "aft_vpc_private_subnet_02_cidr" {
-  type        = string
-  description = "CIDR Block to allocate to the Private Subnet 02"
-  default     = "192.168.1.0/24"
+variable "aft_vpc_public_subnet_cidrs" {
+  type        = list(string)
+  description = "CIDR Blocks to allocate to the Public Subnets"
+  default     = ["192.168.2.0/25"]
   validation {
-    condition     = can(regex("^([0-9]{1,3}\\.){3}[0-9]{1,3}(\\/([0-9]|[1-2][0-9]|3[0-2]))?$", var.aft_vpc_private_subnet_02_cidr))
-    error_message = "Variable var: aft_vpc_private_subnet_02_cidr value must be a valid network CIDR, x.x.x.x/y."
-  }
-}
-
-variable "aft_vpc_public_subnet_01_cidr" {
-  type        = string
-  description = "CIDR Block to allocate to the Public Subnet 01"
-  default     = "192.168.2.0/25"
-  validation {
-    condition     = can(regex("^([0-9]{1,3}\\.){3}[0-9]{1,3}(\\/([0-9]|[1-2][0-9]|3[0-2]))?$", var.aft_vpc_public_subnet_01_cidr))
+    condition     = can([for s in var.aft_vpc_public_subnet_cidrs : regex("^([0-9]{1,3}\\.){3}[0-9]{1,3}(\\/([0-9]|[1-2][0-9]|3[0-2]))?$", s)])
     error_message = "Variable var: aft_vpc_public_subnet_01_cidr value must be a valid network CIDR, x.x.x.x/y."
-  }
-}
-
-variable "aft_vpc_public_subnet_02_cidr" {
-  type        = string
-  description = "CIDR Block to allocate to the Public Subnet 02"
-  default     = "192.168.2.128/25"
-  validation {
-    condition     = can(regex("^([0-9]{1,3}\\.){3}[0-9]{1,3}(\\/([0-9]|[1-2][0-9]|3[0-2]))?$", var.aft_vpc_public_subnet_02_cidr))
-    error_message = "Variable var: aft_vpc_public_subnet_02_cidr value must be a valid network CIDR, x.x.x.x/y."
   }
 }
