@@ -4,3 +4,7 @@
 data "local_file" "version" {
   filename = "${path.module}/VERSION"
 }
+
+data "aws_availability_zones" "available" {
+  state = "available"
+}
