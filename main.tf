@@ -19,7 +19,7 @@ module "aft_account_provisioning_framework" {
   aft_common_layer_arn                             = module.aft_lambda_layer.layer_version_arn
   aft_kms_key_arn                                  = module.aft_account_request_framework.aft_kms_key_arn
   aft_vpc_private_subnets                          = module.vpc.private_subnets
-  aft_vpc_default_sg                               = module.vpc.default_security_group_id
+  aft_vpc_default_sg                               = [module.vpc.default_security_group_id]
   cloudwatch_log_group_retention                   = var.cloudwatch_log_group_retention
   provisioning_framework_archive_path              = module.packaging.provisioning_framework_archive_path
   provisioning_framework_archive_hash              = module.packaging.provisioning_framework_archive_hash
@@ -27,7 +27,9 @@ module "aft_account_provisioning_framework" {
 
 module "vpc" {
   source = "terraform-aws-modules/vpc/aws"
-
+  providers = {
+    aws = aws.aft_management
+  }
   name = "aft-management-vpc"
   cidr = var.aft_vpc_cidr
 
@@ -134,7 +136,7 @@ module "aft_code_repositories" {
   account_request_table_name                      = module.aft_account_request_framework.request_table_name
   codepipeline_s3_bucket_arn                      = module.aft_customizations.aft_codepipeline_customizations_bucket_arn
   codepipeline_s3_bucket_name                     = module.aft_customizations.aft_codepipeline_customizations_bucket_name
-  security_group_ids                              = module.vpc.default_security_group_id
+  security_group_ids                              = [module.vpc.default_security_group_id]
   subnet_ids                                      = module.vpc.private_subnets
   aft_key_arn                                     = module.aft_account_request_framework.aft_kms_key_arn
   account_request_repo_branch                     = var.account_request_repo_branch
@@ -172,7 +174,7 @@ module "aft_customizations" {
   request_metadata_table_name                       = module.aft_account_request_framework.request_metadata_table_name
   aft_vpc_id                                        = module.vpc.vpc_id
   aft_vpc_private_subnets                           = module.vpc.private_subnets
-  aft_vpc_default_sg                                = module.vpc.default_security_group_id
+  aft_vpc_default_sg                                = [module.vpc.default_security_group_id]
   aft_config_backend_bucket_id                      = module.aft_backend.bucket_id
   aft_config_backend_table_id                       = module.aft_backend.table_id
   aft_config_backend_kms_key_id                     = module.aft_backend.kms_key_id
@@ -202,7 +204,7 @@ module "aft_feature_options" {
   aft_sns_topic_arn                         = module.aft_account_request_framework.sns_topic_arn
   aft_failure_sns_topic_arn                 = module.aft_account_request_framework.failure_sns_topic_arn
   aft_vpc_private_subnets                   = module.vpc.private_subnets
-  aft_vpc_default_sg                        = module.vpc.default_security_group_id
+  aft_vpc_default_sg                        = [module.vpc.default_security_group_id]
   log_archive_account_id                    = var.log_archive_account_id
   cloudwatch_log_group_retention            = var.cloudwatch_log_group_retention
   feature_options_archive_path              = module.packaging.feature_options_archive_path
@@ -235,7 +237,7 @@ module "aft_lambda_layer" {
   aft_kms_key_arn                                   = module.aft_account_request_framework.aft_kms_key_arn
   aft_vpc_id                                        = module.vpc.vpc_id
   aft_vpc_private_subnets                           = module.vpc.private_subnets
-  aft_vpc_default_sg                                = module.vpc.default_security_group_id
+  aft_vpc_default_sg                                = [module.vpc.default_security_group_id]
   s3_bucket_name                                    = module.aft_customizations.aft_codepipeline_customizations_bucket_name
   builder_archive_path                              = module.packaging.builder_archive_path
   builder_archive_hash                              = module.packaging.builder_archive_hash
