@@ -14,18 +14,27 @@ resource "aws_cloudwatch_event_permission" "control_tower_management_account" {
 
 ######### Control Tower Events - CT Management #########
 resource "aws_cloudwatch_event_rule" "aft_control_tower_events" {
-  provider      = aws.ct_management
-  name          = "aft-capture-ct-events"
-  description   = "Capture ControlTower events"
-  event_pattern = <<EOF
-{
-  "source": ["aws.controltower"],
-  "detail-type": ["AWS Service Event via CloudTrail"],
-  "detail": {
-    "eventName": ["SetupLandingZone", "UpdateLandingZone", "RegisterOrganizationalUnit", "DeregisterOrganizationalUnit", "EnableGuardrail", "DisableGuardrail", "CreateManagedAccount", "UpdateManagedAccount"]
-  }
-}
-EOF
+  provider    = aws.ct_management
+  name        = "aft-capture-ct-events"
+  description = "Capture ControlTower events"
+  event_pattern = jsonencode(
+    {
+      "source" : ["aws.controltower"],
+      "detail-type" : ["AWS Service Event via CloudTrail"],
+      "detail" : {
+        "eventName" : [
+          "SetupLandingZone",
+          "UpdateLandingZone",
+          "RegisterOrganizationalUnit",
+          "DeregisterOrganizationalUnit",
+          "EnableGuardrail",
+          "DisableGuardrail",
+          "CreateManagedAccount",
+          "UpdateManagedAccount"
+        ]
+      }
+    }
+  )
 }
 
 resource "aws_cloudwatch_event_target" "aft_management_event_bus" {
@@ -40,11 +49,11 @@ resource "aws_cloudwatch_event_rule" "aft_controltower_event_trigger" {
   name           = "aft-controltower-event-logger"
   description    = "Send CT Events to Lambda"
   event_bus_name = aws_cloudwatch_event_bus.aft_from_ct_management.name
-  event_pattern  = <<EOF
-{
-  "account": ["${data.aws_caller_identity.ct-management.account_id}"]
-}
-EOF
+  event_pattern = jsonencode(
+    {
+      "account" : [data.aws_caller_identity.ct-management.account_id]
+    }
+  )
 }
 
 resource "aws_cloudwatch_event_target" "aft_controltower_event_logger" {
@@ -53,8 +62,7 @@ resource "aws_cloudwatch_event_target" "aft_controltower_event_logger" {
   event_bus_name = aws_cloudwatch_event_bus.aft_from_ct_management.name
 }
 
-######### AFT invoke AFT Account Provisioning Framework ######### 
-
+######### AFT invoke AFT Account Provisioning Framework #########
 resource "aws_cloudwatch_event_target" "aft_invoke_aft_account_provisioning_framework" {
   rule           = aws_cloudwatch_event_rule.aft_controltower_event_trigger.name
   arn            = aws_lambda_function.aft_invoke_aft_account_provisioning_framework.arn

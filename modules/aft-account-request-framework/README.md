@@ -8,7 +8,6 @@ This module deploys the components responsible for processing an account request
 - Triggering Step Functions based on a request payload
 
 ![Request Processor](../../images/account_request.png)
-
 ## Requirements
 
 | Name | Version |
@@ -95,34 +94,6 @@ No modules.
 | [aws_iam_policy.AWSLambdaBasicExecutionRole](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/iam_policy) | data source |
 | [aws_iam_policy.AWSLambdaVPCAccessExecutionRole](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/iam_policy) | data source |
 | [aws_region.aft-management](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/region) | data source |
-| [aws_subnet_ids.codebuild](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/subnet_ids) | data source |
-| [aws_subnet_ids.codecommit](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/subnet_ids) | data source |
-| [aws_subnet_ids.codepipeline](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/subnet_ids) | data source |
-| [aws_subnet_ids.events](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/subnet_ids) | data source |
-| [aws_subnet_ids.git-codecommit](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/subnet_ids) | data source |
-| [aws_subnet_ids.kms](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/subnet_ids) | data source |
-| [aws_subnet_ids.lambda](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/subnet_ids) | data source |
-| [aws_subnet_ids.logs](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/subnet_ids) | data source |
-| [aws_subnet_ids.servicecatalog](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/subnet_ids) | data source |
-| [aws_subnet_ids.sns](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/subnet_ids) | data source |
-| [aws_subnet_ids.sqs](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/subnet_ids) | data source |
-| [aws_subnet_ids.ssm](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/subnet_ids) | data source |
-| [aws_subnet_ids.states](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/subnet_ids) | data source |
-| [aws_subnet_ids.sts](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/subnet_ids) | data source |
-| [aws_vpc_endpoint_service.codebuild](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/vpc_endpoint_service) | data source |
-| [aws_vpc_endpoint_service.codecommit](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/vpc_endpoint_service) | data source |
-| [aws_vpc_endpoint_service.codepipeline](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/vpc_endpoint_service) | data source |
-| [aws_vpc_endpoint_service.events](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/vpc_endpoint_service) | data source |
-| [aws_vpc_endpoint_service.git-codecommit](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/vpc_endpoint_service) | data source |
-| [aws_vpc_endpoint_service.kms](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/vpc_endpoint_service) | data source |
-| [aws_vpc_endpoint_service.lambda](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/vpc_endpoint_service) | data source |
-| [aws_vpc_endpoint_service.logs](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/vpc_endpoint_service) | data source |
-| [aws_vpc_endpoint_service.servicecatalog](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/vpc_endpoint_service) | data source |
-| [aws_vpc_endpoint_service.sns](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/vpc_endpoint_service) | data source |
-| [aws_vpc_endpoint_service.sqs](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/vpc_endpoint_service) | data source |
-| [aws_vpc_endpoint_service.ssm](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/vpc_endpoint_service) | data source |
-| [aws_vpc_endpoint_service.states](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/vpc_endpoint_service) | data source |
-| [aws_vpc_endpoint_service.sts](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/vpc_endpoint_service) | data source |
 
 ## Inputs
 
@@ -131,10 +102,12 @@ No modules.
 | <a name="input_account_factory_product_name"></a> [account\_factory\_product\_name](#input\_account\_factory\_product\_name) | Copyright Amazon.com, Inc. or its affiliates. All rights reserved. SPDX-License-Identifier: Apache-2.0 | `string` | n/a | yes |
 | <a name="input_aft_account_provisioning_framework_sfn_name"></a> [aft\_account\_provisioning\_framework\_sfn\_name](#input\_aft\_account\_provisioning\_framework\_sfn\_name) | n/a | `string` | n/a | yes |
 | <a name="input_aft_common_layer_arn"></a> [aft\_common\_layer\_arn](#input\_aft\_common\_layer\_arn) | n/a | `string` | n/a | yes |
+| <a name="input_aft_vpc_default_sg_id"></a> [aft\_vpc\_default\_sg\_id](#input\_aft\_vpc\_default\_sg\_id) | n/a | `string` | n/a | yes |
 | <a name="input_aft_vpc_id"></a> [aft\_vpc\_id](#input\_aft\_vpc\_id) | n/a | `string` | n/a | yes |
 | <a name="input_aft_vpc_private_subnet_ids"></a> [aft\_vpc\_private\_subnet\_ids](#input\_aft\_vpc\_private\_subnet\_ids) | n/a | `list(string)` | n/a | yes |
 | <a name="input_aft_vpc_public_subnet_ids"></a> [aft\_vpc\_public\_subnet\_ids](#input\_aft\_vpc\_public\_subnet\_ids) | n/a | `list(string)` | n/a | yes |
 | <a name="input_cloudwatch_log_group_retention"></a> [cloudwatch\_log\_group\_retention](#input\_cloudwatch\_log\_group\_retention) | n/a | `string` | n/a | yes |
+| <a name="input_lambda_configuration"></a> [lambda\_configuration](#input\_lambda\_configuration) | n/a | <pre>object({<br>    memory_size = string<br>    runtime     = string<br>    timeout     = string<br>  })</pre> | <pre>{<br>  "memory_size": 1024,<br>  "runtime": "python3.8",<br>  "timeout": 300<br>}</pre> | no |
 | <a name="input_request_framework_archive_hash"></a> [request\_framework\_archive\_hash](#input\_request\_framework\_archive\_hash) | n/a | `string` | n/a | yes |
 | <a name="input_request_framework_archive_path"></a> [request\_framework\_archive\_path](#input\_request\_framework\_archive\_path) | n/a | `string` | n/a | yes |
 

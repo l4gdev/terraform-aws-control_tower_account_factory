@@ -44,30 +44,40 @@ output "invoke_aft_account_provisioning_framework_function_arn" {
 output "request_queue_name" {
   value = aws_sqs_queue.aft_account_request.name
 }
+
 output "request_table_name" {
   value = aws_dynamodb_table.aft_request.name
 }
+
 output "request_audit_table_name" {
   value = aws_dynamodb_table.aft_request_audit.name
 }
+
 output "request_metadata_table_name" {
   value = aws_dynamodb_table.aft_request_metadata.name
 }
+
 output "controltower_events_table_name" {
   value = aws_dynamodb_table.aft_controltower_events.name
 }
+
 output "account_factory_product_name" {
   value = var.account_factory_product_name
 }
+
 output "invoke_aft_account_provisioning_framework_lambda_function_name" {
   value = aws_lambda_function.aft_invoke_aft_account_provisioning_framework.function_name
 }
+
 output "aft_account_provisioning_framework_sfn_name" {
   value = var.aft_account_provisioning_framework_sfn_name
 }
+
 output "aft_sns_topic_arn" {
   value = aws_sns_topic.aft_notifications.arn
 }
+
 output "aft_failure_sns_topic_arn" {
   value = aws_sns_topic.aft_failure_notifications.arn
 }
+

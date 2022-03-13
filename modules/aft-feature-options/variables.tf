@@ -48,10 +48,24 @@ variable "log_archive_account_id" {
 variable "aft_features_sfn_name" {
   type = string
 }
+
 variable "feature_options_archive_path" {
   type = string
 }
 
 variable "feature_options_archive_hash" {
   type = string
+}
+
+variable "lambda_configuration" {
+  type = object({
+    memory_size = string
+    runtime     = string
+    timeout     = string
+  })
+  default = {
+    memory_size = 1024
+    runtime     = "python3.8"
+    timeout     = 300
+  }
 }

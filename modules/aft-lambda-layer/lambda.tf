@@ -21,11 +21,11 @@ resource "aws_lambda_function" "codebuild_invoker" {
 data "aws_lambda_invocation" "invoke_codebuild_job" {
   function_name = aws_lambda_function.codebuild_invoker.function_name
 
-  input = <<JSON
-{
-  "codebuild_project_name": "${aws_codebuild_project.codebuild.name}"
-}
-JSON
+  input = jsonencode(
+    {
+      "codebuild_project_name" : aws_codebuild_project.codebuild.name
+    }
+  )
 }
 
 output "lambda_layer_build_status" {

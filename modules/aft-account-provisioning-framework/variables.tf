@@ -52,3 +52,16 @@ variable "provisioning_framework_archive_path" {
 variable "provisioning_framework_archive_hash" {
   type = string
 }
+
+variable "lambda_configuration" {
+  type = object({
+    memory_size = string
+    runtime     = string
+    timeout     = string
+  })
+  default = {
+    memory_size = 1024
+    runtime     = "python3.8"
+    timeout     = 300
+  }
+}

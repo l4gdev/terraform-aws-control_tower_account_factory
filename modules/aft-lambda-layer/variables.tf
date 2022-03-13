@@ -3,6 +3,7 @@
 #
 variable "lambda_layer_name" {
   type = string
+  description = "The name of the lambda layer"
   validation {
     condition     = can(regex("^[a-zA-Z0-9\\-]+$", var.lambda_layer_name))
     error_message = "Layer name must contain only alphanumeric characters and hyphens."
@@ -19,6 +20,7 @@ variable "aft_tf_aws_customizations_module_git_ref_ssm_path" {
 
 variable "aws_region" {
   type = string
+  description = "The region to deploy the layer in"
 }
 
 variable "lambda_layer_codebuild_delay" {
@@ -27,6 +29,8 @@ variable "lambda_layer_codebuild_delay" {
 
 variable "lambda_layer_python_version" {
   type = string
+  default = "python3.8"
+  description = "Major python version. Defaults to 3.8"
 }
 
 variable "s3_bucket_name" {
@@ -48,6 +52,7 @@ variable "aft_vpc_private_subnets" {
 variable "aft_vpc_default_sg" {
   type = list(string)
 }
+
 variable "aft_version" {
   type = string
 }

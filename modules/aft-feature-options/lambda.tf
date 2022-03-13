@@ -11,9 +11,9 @@ resource "aws_lambda_function" "aft_delete_default_vpc" {
   handler       = "aft_delete_default_vpc.lambda_handler"
 
   source_code_hash = var.feature_options_archive_hash
-  memory_size      = 1024
-  runtime          = "python3.8"
-  timeout          = "300"
+  memory_size      = var.lambda_configuration.memory_size
+  runtime          = var.lambda_configuration.runtime
+  timeout          = var.lambda_configuration.timeout
   layers           = [var.aft_common_layer_arn]
 
   vpc_config {
@@ -28,7 +28,6 @@ resource "aws_cloudwatch_log_group" "aft_delete_default_vpc" {
   retention_in_days = var.cloudwatch_log_group_retention
 }
 
-
 ######## aft_enroll_support ########
 resource "aws_lambda_function" "aft_enroll_support" {
   provider      = aws.aft_management
@@ -39,9 +38,9 @@ resource "aws_lambda_function" "aft_enroll_support" {
   handler       = "aft_enroll_support.lambda_handler"
 
   source_code_hash = var.feature_options_archive_hash
-  memory_size      = 1024
-  runtime          = "python3.8"
-  timeout          = "300"
+  memory_size      = var.lambda_configuration.memory_size
+  runtime          = var.lambda_configuration.runtime
+  timeout          = var.lambda_configuration.timeout
   layers           = [var.aft_common_layer_arn]
 
   vpc_config {
@@ -66,9 +65,9 @@ resource "aws_lambda_function" "aft_enable_cloudtrail" {
   handler       = "aft_enable_cloudtrail.lambda_handler"
 
   source_code_hash = var.feature_options_archive_hash
-  memory_size      = 1024
-  runtime          = "python3.8"
-  timeout          = "300"
+  memory_size      = var.lambda_configuration.memory_size
+  runtime          = var.lambda_configuration.runtime
+  timeout          = var.lambda_configuration.timeout
   layers           = [var.aft_common_layer_arn]
 
   vpc_config {
