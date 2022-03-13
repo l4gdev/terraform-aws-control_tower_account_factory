@@ -2,6 +2,26 @@
 AWS Control Tower Account Factory for Terraform (AFT) follows a GitOps model to automate the processes of account provisioning and account updating in AWS Control Tower. You'll create an *account request* Terraform file, which provides the necessary input that triggers the AFT workflow for account provisioning.
 
 
+## L4G Changes
+
+Unfortunately, the AWS Team is not accepting pull requests. You can consume changes created in this repository. We will try to keep it in sync to what AWS folks does. 
+
+### Introduced changes:
+
+1. Replaced VPC module with the official one `terraform-aws-modules/vpc/aws`
+2. Added a variable `aft_vpc_single_nat_gateway` providing the single nat gateway mode support - to reduce the price
+3. Removed VPC service endpoints
+4. Cleaned up AFT SSM parameters
+
+
+Infracost estimate
+---
+
+OVERALL TOTAL: $39.04 
+
+We still recommend removing nat gateway and disabling event bridge lambda triggers
+
+
 For more information on AFT, see [Overview of AWS Control Tower Account Factory for Terraform](https://docs.aws.amazon.com/controltower/latest/userguide/aft-overview.html)
 
 ## Getting started
