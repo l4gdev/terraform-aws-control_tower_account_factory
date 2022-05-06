@@ -40,3 +40,16 @@ variable "aft_vpc_public_subnet_ids" {
 variable "aft_vpc_default_sg_id" {
   type = string
 }
+
+variable "lambda_configuration" {
+  type = object({
+    memory_size = string
+    runtime     = string
+    timeout     = string
+  })
+  default = {
+    memory_size = 1024
+    runtime     = "python3.8"
+    timeout     = 300
+  }
+}

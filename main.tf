@@ -9,7 +9,8 @@ module "aft_account_provisioning_framework" {
   providers = {
     aws = aws.aft_management
   }
-  source                                           = "./modules/aft-account-provisioning-framework"
+  source = "./modules/aft-account-provisioning-framework"
+
   aft_account_provisioning_framework_sfn_name      = local.aft_account_provisioning_framework_sfn_name
   aft_account_provisioning_customizations_sfn_name = local.aft_account_provisioning_customizations_sfn_name
   trigger_customizations_sfn_name                  = local.trigger_customizations_sfn_name
@@ -26,7 +27,8 @@ module "aft_account_provisioning_framework" {
 }
 
 module "vpc" {
-  source = "terraform-aws-modules/vpc/aws"
+  source = "registry.terraform.io/terraform-aws-modules/vpc/aws"
+
   providers = {
     aws = aws.aft_management
   }
@@ -44,7 +46,7 @@ module "vpc" {
   private_subnet_suffix = "private"
   public_subnet_suffix  = "public"
 
-  default_security_group_name   = "aft-endpoint-sg"
+  default_security_group_name = "aft-endpoint-sg"
   default_security_group_egress = [
     {
       from_port        = 0
@@ -60,7 +62,7 @@ module "vpc" {
       to_port     = 443
       protocol    = "tcp"
       cidr_blocks = var.aft_vpc_cidr
-    }, {
+      }, {
       from_port   = 22
       to_port     = 22
       protocol    = "tcp"
@@ -125,7 +127,7 @@ module "aft_backend" {
 
 module "aft_code_repositories" {
   depends_on = [module.vpc]
-  providers  = {
+  providers = {
     aws = aws.aft_management
   }
   source                                          = "./modules/aft-code-repositories"
@@ -155,7 +157,7 @@ module "aft_code_repositories" {
 
 module "aft_customizations" {
   depends_on = [module.vpc]
-  providers  = {
+  providers = {
     aws = aws.aft_management
   }
   source                                            = "./modules/aft-customizations"
@@ -212,7 +214,7 @@ module "aft_feature_options" {
 }
 
 module "aft_iam_roles" {
-  source    = "./modules/aft-iam-roles"
+  source = "./modules/aft-iam-roles"
   providers = {
     aws.ct_management  = aws.ct_management
     aws.audit          = aws.audit
@@ -223,7 +225,7 @@ module "aft_iam_roles" {
 
 module "aft_lambda_layer" {
   depends_on = [module.vpc]
-  providers  = {
+  providers = {
     aws = aws.aft_management
   }
   source                                            = "./modules/aft-lambda-layer"
@@ -247,67 +249,72 @@ module "aft_ssm_parameters" {
   providers = {
     aws = aws.aft_management
   }
-  source                                                      = "./modules/aft-ssm-parameters"
-  aft_request_queue_name                                      = module.aft_account_request_framework.request_queue_name
-  aft_request_table_name                                      = module.aft_account_request_framework.request_table_name
-  aft_request_audit_table_name                                = module.aft_account_request_framework.request_audit_table_name
-  aft_request_metadata_table_name                             = module.aft_account_request_framework.request_metadata_table_name
-  aft_controltower_events_table_name                          = module.aft_account_request_framework.controltower_events_table_name
-  account_factory_product_name                                = module.aft_account_request_framework.account_factory_product_name
-  aft_invoke_aft_account_provisioning_framework_function_name = module.aft_account_request_framework.invoke_aft_account_provisioning_framework_lambda_function_name
-  aft_account_provisioning_framework_sfn_name                 = module.aft_account_request_framework.aft_account_provisioning_framework_sfn_name
-  aft_sns_topic_arn                                           = module.aft_account_request_framework.sns_topic_arn
-  aft_failure_sns_topic_arn                                   = module.aft_account_request_framework.failure_sns_topic_arn
-  request_action_trigger_function_arn                         = module.aft_account_request_framework.request_action_trigger_function_arn
-  request_audit_trigger_function_arn                          = module.aft_account_request_framework.request_audit_trigger_function_arn
-  request_processor_function_arn                              = module.aft_account_request_framework.request_processor_function_arn
-  control_tower_event_logger_function_arn                     = module.aft_account_request_framework.control_tower_event_logger_function_arn
-  invoke_aft_account_provisioning_framework_function_arn      = module.aft_account_request_framework.invoke_aft_account_provisioning_framework_function_arn
-  validate_request_function_arn                               = module.aft_account_provisioning_framework.validate_request_function_arn
-  get_account_info_function_arn                               = module.aft_account_provisioning_framework.get_account_info_function_arn
-  create_role_function_arn                                    = module.aft_account_provisioning_framework.create_role_function_arn
-  tag_account_function_arn                                    = module.aft_account_provisioning_framework.tag_account_function_arn
-  persist_metadata_function_arn                               = module.aft_account_provisioning_framework.persist_metadata_function_arn
-  aft_customizations_identify_targets_function_arn            = module.aft_customizations.aft_customizations_identify_targets_function_arn
-  aft_customizations_execute_pipeline_function_arn            = module.aft_customizations.aft_customizations_execute_pipeline_function_arn
-  aft_customizations_get_pipeline_executions_function_arn     = module.aft_customizations.aft_customizations_get_pipeline_executions_function_arn
-  codestar_connection_arn                                     = module.aft_code_repositories.codestar_connection_arn
-  aft_log_key_arn                                             = module.aft_feature_options.aws_aft_log_key_arn
-  aft_logging_bucket_arn                                      = module.aft_feature_options.aws_aft_logs_s3_bucket_arn
-  aft_config_backend_bucket_id                                = module.aft_backend.bucket_id
-  aft_config_backend_table_id                                 = module.aft_backend.table_id
-  aft_config_backend_kms_key_id                               = module.aft_backend.kms_key_id
-  aft_administrator_role_name                                 = local.aft_administrator_role_name
-  aft_execution_role_name                                     = local.aft_execution_role_name
-  aft_session_name                                            = local.aft_session_name
-  aft_version                                                 = local.aft_version
-  ct_management_account_id                                    = var.ct_management_account_id
-  ct_audit_account_id                                         = var.audit_account_id
-  ct_log_archive_account_id                                   = var.log_archive_account_id
-  aft_management_account_id                                   = var.aft_management_account_id
-  ct_primary_region                                           = var.ct_home_region
-  tf_version                                                  = var.terraform_version
-  tf_distribution                                             = var.terraform_distribution
-  terraform_api_endpoint                                      = var.terraform_api_endpoint
-  account_request_repo_branch                                 = var.account_request_repo_branch
-  account_request_repo_name                                   = var.account_request_repo_name
-  vcs_provider                                                = var.vcs_provider
-  aft_config_backend_primary_region                           = var.ct_home_region
-  aft_config_backend_secondary_region                         = var.tf_backend_secondary_region
-  aft_framework_repo_url                                      = var.aft_framework_repo_url
-  aft_framework_repo_git_ref                                  = var.aft_framework_repo_git_ref
-  terraform_token                                             = var.terraform_token
-  terraform_version                                           = var.terraform_version
-  terraform_org_name                                          = var.terraform_org_name
-  aft_feature_cloudtrail_data_events                          = var.aft_feature_cloudtrail_data_events
-  aft_feature_enterprise_support                              = var.aft_feature_enterprise_support
-  aft_feature_delete_default_vpcs_enabled                     = var.aft_feature_delete_default_vpcs_enabled
-  account_customizations_repo_name                            = var.account_customizations_repo_name
-  account_customizations_repo_branch                          = var.account_customizations_repo_branch
-  global_customizations_repo_name                             = var.global_customizations_repo_name
-  global_customizations_repo_branch                           = var.global_customizations_repo_branch
-  account_provisioning_customizations_repo_name               = var.account_provisioning_customizations_repo_name
-  account_provisioning_customizations_repo_branch             = var.account_provisioning_customizations_repo_branch
-  maximum_concurrent_customizations                           = var.maximum_concurrent_customizations
-  github_enterprise_url                                       = var.github_enterprise_url
+  source = "./modules/aft-ssm-parameters"
+  not_sensitive = {
+    account_customizations_repo_branch                          = var.account_customizations_repo_branch
+    account_customizations_repo_name                            = var.account_customizations_repo_name
+    account_factory_product_name                                = module.aft_account_request_framework.account_factory_product_name
+    account_provisioning_customizations_repo_branch             = var.account_provisioning_customizations_repo_branch
+    account_provisioning_customizations_repo_name               = var.account_provisioning_customizations_repo_name
+    account_request_repo_branch                                 = var.account_request_repo_branch
+    account_request_repo_name                                   = var.account_request_repo_name
+    aft_account_provisioning_framework_sfn_name                 = module.aft_account_request_framework.aft_account_provisioning_framework_sfn_name
+    aft_administrator_role_name                                 = local.aft_administrator_role_name
+    aft_config_backend_bucket_id                                = module.aft_backend.bucket_id
+    aft_config_backend_kms_key_id                               = module.aft_backend.kms_key_id
+    aft_config_backend_primary_region                           = var.ct_home_region
+    aft_config_backend_secondary_region                         = var.tf_backend_secondary_region
+    aft_config_backend_table_id                                 = module.aft_backend.table_id
+    aft_controltower_events_table_name                          = module.aft_account_request_framework.controltower_events_table_name
+    aft_customizations_execute_pipeline_function_arn            = module.aft_customizations.aft_customizations_execute_pipeline_function_arn
+    aft_customizations_get_pipeline_executions_function_arn     = module.aft_customizations.aft_customizations_get_pipeline_executions_function_arn
+    aft_customizations_identify_targets_function_arn            = module.aft_customizations.aft_customizations_identify_targets_function_arn
+    aft_execution_role_name                                     = local.aft_execution_role_name
+    aft_failure_sns_topic_arn                                   = module.aft_account_request_framework.failure_sns_topic_arn
+    aft_feature_cloudtrail_data_events                          = var.aft_feature_cloudtrail_data_events
+    aft_feature_delete_default_vpcs_enabled                     = var.aft_feature_delete_default_vpcs_enabled
+    aft_feature_enterprise_support                              = var.aft_feature_enterprise_support
+    aft_framework_repo_git_ref                                  = var.aft_framework_repo_git_ref
+    aft_framework_repo_url                                      = var.aft_framework_repo_url
+    aft_invoke_aft_account_provisioning_framework_function_name = module.aft_account_request_framework.invoke_aft_account_provisioning_framework_lambda_function_name
+    aft_log_key_arn                                             = module.aft_feature_options.aws_aft_log_key_arn
+    aft_logging_bucket_arn                                      = module.aft_feature_options.aws_aft_logs_s3_bucket_arn
+    aft_management_account_id                                   = var.aft_management_account_id
+    aft_request_audit_table_name                                = module.aft_account_request_framework.request_audit_table_name
+    aft_request_metadata_table_name                             = module.aft_account_request_framework.request_metadata_table_name
+    aft_request_queue_name                                      = module.aft_account_request_framework.request_queue_name
+    aft_request_table_name                                      = module.aft_account_request_framework.request_table_name
+    aft_session_name                                            = local.aft_session_name
+    aft_sns_topic_arn                                           = module.aft_account_request_framework.sns_topic_arn
+    aft_version                                                 = local.aft_version
+    codestar_connection_arn                                     = module.aft_code_repositories.codestar_connection_arn
+    control_tower_event_logger_function_arn                     = module.aft_account_request_framework.control_tower_event_logger_function_arn
+    create_role_function_arn                                    = module.aft_account_provisioning_framework.create_role_function_arn
+    ct_audit_account_id                                         = var.audit_account_id
+    ct_log_archive_account_id                                   = var.log_archive_account_id
+    ct_management_account_id                                    = var.ct_management_account_id
+    ct_primary_region                                           = var.ct_home_region
+    get_account_info_function_arn                               = module.aft_account_provisioning_framework.get_account_info_function_arn
+    github_enterprise_url                                       = var.github_enterprise_url
+    global_customizations_repo_branch                           = var.global_customizations_repo_branch
+    global_customizations_repo_name                             = var.global_customizations_repo_name
+    invoke_aft_account_provisioning_framework_function_arn      = module.aft_account_request_framework.invoke_aft_account_provisioning_framework_function_arn
+    maximum_concurrent_customizations                           = var.maximum_concurrent_customizations
+    persist_metadata_function_arn                               = module.aft_account_provisioning_framework.persist_metadata_function_arn
+    request_action_trigger_function_arn                         = module.aft_account_request_framework.request_action_trigger_function_arn
+    request_audit_trigger_function_arn                          = module.aft_account_request_framework.request_audit_trigger_function_arn
+    request_processor_function_arn                              = module.aft_account_request_framework.request_processor_function_arn
+    tag_account_function_arn                                    = module.aft_account_provisioning_framework.tag_account_function_arn
+    terraform_api_endpoint                                      = var.terraform_api_endpoint
+    terraform_org_name                                          = var.terraform_org_name
+    terraform_version                                           = var.terraform_version
+    tf_distribution                                             = var.terraform_distribution
+    tf_version                                                  = var.terraform_version
+    validate_request_function_arn                               = module.aft_account_provisioning_framework.validate_request_function_arn
+    vcs_provider                                                = var.vcs_provider
+  }
+
+  sensitive = {
+    terraform_token = var.terraform_token
+  }
 }

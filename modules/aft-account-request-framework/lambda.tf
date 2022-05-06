@@ -1,8 +1,8 @@
 # Copyright Amazon.com, Inc. or its affiliates. All rights reserved.
 # SPDX-License-Identifier: Apache-2.0
 #
-######## aft_account_request_audit_trigger ########
 
+######## aft_account_request_audit_trigger ########
 resource "aws_lambda_function" "aft_account_request_audit_trigger" {
 
   filename      = var.request_framework_archive_path
@@ -12,9 +12,9 @@ resource "aws_lambda_function" "aft_account_request_audit_trigger" {
   handler       = "aft_account_request_audit_trigger.lambda_handler"
 
   source_code_hash = var.request_framework_archive_hash
-  memory_size      = 1024
-  runtime          = "python3.8"
-  timeout          = "300"
+  memory_size      = var.lambda_configuration.memory_size
+  runtime          = var.lambda_configuration.runtime
+  timeout          = var.lambda_configuration.timeout
   layers           = [var.aft_common_layer_arn]
 
   vpc_config {
@@ -44,8 +44,6 @@ resource "aws_cloudwatch_log_group" "aft_account_request_audit_trigger" {
 }
 
 ######## aft_account_request_action_trigger ########
-
-
 resource "aws_lambda_function" "aft_account_request_action_trigger" {
 
   filename      = var.request_framework_archive_path
@@ -55,9 +53,9 @@ resource "aws_lambda_function" "aft_account_request_action_trigger" {
   handler       = "aft_account_request_action_trigger.lambda_handler"
 
   source_code_hash = var.request_framework_archive_hash
-  memory_size      = 1024
-  runtime          = "python3.8"
-  timeout          = "300"
+  memory_size      = var.lambda_configuration.memory_size
+  runtime          = var.lambda_configuration.runtime
+  timeout          = var.lambda_configuration.timeout
   layers           = [var.aft_common_layer_arn]
 
   vpc_config {
@@ -81,8 +79,6 @@ resource "aws_cloudwatch_log_group" "aft_account_request_action_trigger" {
 }
 
 ######## aft_controltower_event_logger ########
-
-
 resource "aws_lambda_function" "aft_controltower_event_logger" {
 
   filename      = var.request_framework_archive_path
@@ -92,9 +88,9 @@ resource "aws_lambda_function" "aft_controltower_event_logger" {
   handler       = "aft_controltower_event_logger.lambda_handler"
 
   source_code_hash = var.request_framework_archive_hash
-  memory_size      = 1024
-  runtime          = "python3.8"
-  timeout          = "300"
+  memory_size      = var.lambda_configuration.memory_size
+  runtime          = var.lambda_configuration.runtime
+  timeout          = var.lambda_configuration.timeout
   layers           = [var.aft_common_layer_arn]
 
   vpc_config {
@@ -117,8 +113,6 @@ resource "aws_cloudwatch_log_group" "aft_controltower_event_logger" {
 }
 
 ######## aft_account_request_processor ########
-
-
 resource "aws_lambda_function" "aft_account_request_processor" {
 
   filename      = var.request_framework_archive_path
@@ -128,9 +122,9 @@ resource "aws_lambda_function" "aft_account_request_processor" {
   handler       = "aft_account_request_processor.lambda_handler"
 
   source_code_hash = var.request_framework_archive_hash
-  memory_size      = 1024
-  runtime          = "python3.8"
-  timeout          = "300"
+  memory_size      = var.lambda_configuration.memory_size
+  runtime          = var.lambda_configuration.runtime
+  timeout          = var.lambda_configuration.timeout
   layers           = [var.aft_common_layer_arn]
 
   vpc_config {
@@ -154,8 +148,6 @@ resource "aws_cloudwatch_log_group" "aft_account_request_processor" {
 }
 
 ######## aft_invoke_aft_account_provisioning_framework ########
-
-
 resource "aws_lambda_function" "aft_invoke_aft_account_provisioning_framework" {
 
   filename      = var.request_framework_archive_path
@@ -165,9 +157,9 @@ resource "aws_lambda_function" "aft_invoke_aft_account_provisioning_framework" {
   handler       = "aft_invoke_aft_account_provisioning_framework.lambda_handler"
 
   source_code_hash = var.request_framework_archive_hash
-  memory_size      = 1024
-  runtime          = "python3.8"
-  timeout          = "300"
+  memory_size      = var.lambda_configuration.memory_size
+  runtime          = var.lambda_configuration.runtime
+  timeout          = var.lambda_configuration.timeout
   layers           = [var.aft_common_layer_arn]
 
   vpc_config {

@@ -71,31 +71,31 @@ resource "aws_cloudwatch_event_rule" "account_request" {
   name        = "aft-account-request-codepipeline-trigger"
   description = "Trigger CodePipeline upon commit"
 
-  event_pattern = <<EOF
-{
-  "source": [
-    "aws.codecommit"
-  ],
-  "detail-type": [
-    "CodeCommit Repository State Change"
-  ],
-  "resources": [
-    "${aws_codecommit_repository.account_request[0].arn}"
-  ],
-  "detail": {
-    "event": [
-      "referenceCreated",
-      "referenceUpdated"
-    ],
-    "referenceType": [
-      "branch"
-    ],
-    "referenceName": [
-      "${var.account_request_repo_branch}"
-    ]
-  }
-}
-EOF
+  event_pattern = jsonencode(
+    {
+      "source" : [
+        "aws.codecommit"
+      ],
+      "detail-type" : [
+        "CodeCommit Repository State Change"
+      ],
+      "resources" : [
+        aws_codecommit_repository.account_request[0].arn
+      ],
+      "detail" : {
+        "event" : [
+          "referenceCreated",
+          "referenceUpdated"
+        ],
+        "referenceType" : [
+          "branch"
+        ],
+        "referenceName" : [
+          var.account_request_repo_branch
+        ]
+      }
+    }
+  )
 }
 
 resource "aws_cloudwatch_event_target" "account_request" {
@@ -308,31 +308,31 @@ resource "aws_cloudwatch_event_rule" "account_provisioning_customizations" {
   name        = "aft-account-provisioning-customizations-trigger"
   description = "Trigger CodePipeline upon commit"
 
-  event_pattern = <<EOF
-{
-  "source": [
-    "aws.codecommit"
-  ],
-  "detail-type": [
-    "CodeCommit Repository State Change"
-  ],
-  "resources": [
-    "${aws_codecommit_repository.account_provisioning_customizations[0].arn}"
-  ],
-  "detail": {
-    "event": [
-      "referenceCreated",
-      "referenceUpdated"
-    ],
-    "referenceType": [
-      "branch"
-    ],
-    "referenceName": [
-      "${var.account_provisioning_customizations_repo_branch}"
-    ]
-  }
-}
-EOF
+  event_pattern = jsonencode(
+    {
+      "source" : [
+        "aws.codecommit"
+      ],
+      "detail-type" : [
+        "CodeCommit Repository State Change"
+      ],
+      "resources" : [
+        aws_codecommit_repository.account_provisioning_customizations[0].arn
+      ],
+      "detail" : {
+        "event" : [
+          "referenceCreated",
+          "referenceUpdated"
+        ],
+        "referenceType" : [
+          "branch"
+        ],
+        "referenceName" : [
+          var.account_provisioning_customizations_repo_branch
+        ]
+      }
+    }
+  )
 }
 
 resource "aws_cloudwatch_event_target" "account_provisioning_customizations" {

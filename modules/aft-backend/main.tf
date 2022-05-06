@@ -92,125 +92,124 @@ resource "aws_iam_role" "replication" {
   provider = aws.primary_region
   name     = "aft-s3-terraform-backend-replication"
 
-  assume_role_policy = <<POLICY
-{
-  "Version": "2012-10-17",
-  "Statement": [
+  assume_role_policy = jsonencode(
     {
-      "Action": "sts:AssumeRole",
-      "Principal": {
-        "Service": "s3.amazonaws.com"
-      },
-      "Effect": "Allow"
-    }
-  ]
-}
-POLICY
+      "Version" : "2012-10-17",
+      "Statement" : [
+        {
+          "Action" : "sts:AssumeRole",
+          "Principal" : {
+            "Service" : "s3.amazonaws.com"
+          },
+          "Effect" : "Allow"
+        }
+      ]
+  })
 }
 
 resource "aws_iam_policy" "replication" {
   provider = aws.primary_region
   name     = "aft-s3-terraform-backend-replication-policy"
 
-  policy = <<POLICY
-{
-    "Version": "2012-10-17",
-    "Statement": [
+  policy = jsonencode(
+    {
+      "Version" : "2012-10-17",
+      "Statement" : [
         {
-            "Action": [
-                "s3:GetReplicationConfiguration",
-                "s3:ListBucket"
-            ],
-            "Effect": "Allow",
-            "Resource": [
-                "${aws_s3_bucket.primary-backend-bucket.arn}"
-            ]
+          "Action" : [
+            "s3:GetReplicationConfiguration",
+            "s3:ListBucket"
+          ],
+          "Effect" : "Allow",
+          "Resource" : [
+            aws_s3_bucket.primary-backend-bucket.arn
+          ]
         },
         {
-            "Action": [
-                "s3:GetObjectVersionForReplication",
-                "s3:GetObjectVersionAcl",
-                "s3:GetObjectVersionTagging"
-            ],
-            "Effect": "Allow",
-            "Resource": [
+          "Action" : [
+            "s3:GetObjectVersionForReplication",
+            "s3:GetObjectVersionAcl",
+            "s3:GetObjectVersionTagging"
+          ],
+          "Effect" : "Allow",
+          "Resource" : [
+            "${aws_s3_bucket.primary-backend-bucket.arn}/*"
+          ]
+        },
+        {
+          "Action" : [
+            "s3:ReplicateObject",
+            "s3:ReplicateDelete",
+            "s3:ReplicateTags"
+          ],
+          "Effect" : "Allow",
+          "Condition" : {
+            "StringLikeIfExists" : {
+              "s3:x-amz-server-side-encryption" : [
+                "aws:kms",
+                "AES256"
+              ],
+              "s3:x-amz-server-side-encryption-aws-kms-key-id" : [
+                aws_kms_key.encrypt-secondary-region.arn
+              ]
+            }
+          },
+          "Resource" : "${aws_s3_bucket.secondary-backend-bucket.arn}/*"
+        },
+        {
+          "Action" : [
+            "kms:Decrypt"
+          ],
+          "Effect" : "Allow",
+          "Condition" : {
+            "StringLike" : {
+              "kms:ViaService" : "s3.${var.primary_region}.amazonaws.com",
+              "kms:EncryptionContext:aws:s3:arn" : [
                 "${aws_s3_bucket.primary-backend-bucket.arn}/*"
-            ]
+              ]
+            }
+          },
+          "Resource" : [
+            aws_kms_key.encrypt-primary-region.arn
+          ]
         },
         {
-            "Action": [
-                "s3:ReplicateObject",
-                "s3:ReplicateDelete",
-                "s3:ReplicateTags"
-            ],
-            "Effect": "Allow",
-            "Condition": {
-                "StringLikeIfExists": {
-                    "s3:x-amz-server-side-encryption": [
-                        "aws:kms",
-                        "AES256"
-                    ],
-                    "s3:x-amz-server-side-encryption-aws-kms-key-id": [
-                        "${aws_kms_key.encrypt-secondary-region.arn}"
-                    ]
-                }
-            },
-            "Resource": "${aws_s3_bucket.secondary-backend-bucket.arn}/*"
+          "Action" : [
+            "kms:Encrypt"
+          ],
+          "Effect" : "Allow",
+          "Condition" : {
+            "StringLike" : {
+              "kms:ViaService" : "s3.${var.primary_region}.amazonaws.com",
+              "kms:EncryptionContext:aws:s3:arn" : [
+                "${aws_s3_bucket.primary-backend-bucket.arn}/*"
+              ]
+            }
+          },
+          "Resource" : [
+            aws_kms_key.encrypt-primary-region.arn
+          ]
         },
         {
-            "Action": [
-                "kms:Decrypt"
-            ],
-            "Effect": "Allow",
-            "Condition": {
-                "StringLike": {
-                    "kms:ViaService": "s3.${var.primary_region}.amazonaws.com",
-                    "kms:EncryptionContext:aws:s3:arn": [
-                        "${aws_s3_bucket.primary-backend-bucket.arn}/*"
-                    ]
-                }
-            },
-            "Resource": [
-                "${aws_kms_key.encrypt-primary-region.arn}"
-            ]
-        },
-        {
-            "Action": [
-                "kms:Encrypt"
-            ],
-            "Effect": "Allow",
-            "Condition": {
-                "StringLike": {
-                    "kms:ViaService": "s3.${var.primary_region}.amazonaws.com",
-                    "kms:EncryptionContext:aws:s3:arn": [
-                        "${aws_s3_bucket.primary-backend-bucket.arn}/*"
-                    ]
-                }
-            },
-            "Resource": [
-                "${aws_kms_key.encrypt-primary-region.arn}"
-            ]
-        },
-        {
-            "Action": [
-                "kms:Encrypt"
-            ],
-            "Effect": "Allow",
-            "Condition": {
-                "StringLike": {
-                    "kms:ViaService": "s3.${var.secondary_region}.amazonaws.com",
-                    "kms:EncryptionContext:aws:s3:arn": [
-                        "${aws_s3_bucket.secondary-backend-bucket.arn}/*"
-                    ]
-                }
-            },
-            "Resource": [
-                "${aws_kms_key.encrypt-secondary-region.arn}"
-            ]
+          "Action" : [
+            "kms:Encrypt"
+          ],
+          "Effect" : "Allow",
+          "Condition" : {
+            "StringLike" : {
+              "kms:ViaService" : "s3.${var.secondary_region}.amazonaws.com",
+              "kms:EncryptionContext:aws:s3:arn" : [
+                "${aws_s3_bucket.secondary-backend-bucket.arn}/*"
+              ]
+            }
+          },
+          "Resource" : [
+            aws_kms_key.encrypt-secondary-region.arn
+          ]
         }
-    ]
-}
-POLICY
+      ]
+    }
+  )
 }
 
 resource "aws_iam_role_policy_attachment" "replication" {

@@ -5,6 +5,7 @@ resource "aws_backup_vault" "aft_controltower_backup_vault" {
   name        = "aft-controltower-backup-vault"
   kms_key_arn = aws_kms_key.aft.arn
 }
+
 resource "aws_backup_plan" "aft_controltower_backup_plan" {
   name = "aft-controltower-backup-plan"
   rule {
